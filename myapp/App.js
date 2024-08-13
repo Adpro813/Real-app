@@ -35,30 +35,16 @@ const LoadingScreen = ({ navigation }) => {
 };
 
 function StartScreen ({navigation}) {
-  return (
-    <View style={styles.container}>
-      <View style={styles.buttonContainer}> 
-        <Button
-          title = "Log in"
-          onPress={() => navigation.navigate('LogInScreen')} 
-        />
-      </View>
-    </View>
-  );
-};
-
-const LogInScreen = ({navigation}) => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   return (
-  <View style={styles.container}> 
-    <Text>Login</Text>
+    <View style={styles.container}>
       <TextInput
         style={styles.input}
-        placeholder="Email"
+        placeholder="Username"
 
-        value={email}
-        onChangeText={setEmail}
+        value={username}
+        onChangeText={setUsername}
       />  
       <TextInput
         style={styles.input}
@@ -67,33 +53,32 @@ const LogInScreen = ({navigation}) => {
         value={password}
         onChangeText={setPassword}
       />
-      <View style ={styles.buttonContainer}>
+      <View style={styles.buttonContainer}> 
         <Button
-          title = "Continue"
-          onPress={() => navigation.navigate('HomeScreen')}
+          title = "Log in"
+          onPress={() => navigation.navigate('HomeScreen')} 
         />
       </View>
+    </View>
+  );
+};
+
+const HomeScreen = ({navigation}) => {
+
+  return (
+  <View style={styles.container}> 
+    <Text> Home Screen </Text>
   </View>
   );
 }
 
-const HomeScreen = () => {
-  return (
-  <View style={styles.container}> 
-    <Text>
-      Home Screen
-    </Text>
-  </View>
-  );
-}
 
 const AppNavigator = () => {
   return (
     <Stack.Navigator initialRouteName="LoadingScreen">
       <Stack.Screen name="LoadingScreen" component={LoadingScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Start Screen" component={StartScreen} options = {{headerShown:false}} />
-      <Stack.Screen name="LogInScreen" component={LogInScreen} options = {{headerShown:false}} />
-      <Stack.Screen name="Home Screen" component={HomeScreen} options = {{headerShown:false}} />
+      <Stack.Screen name="HomeScreen" component={HomeScreen} options = {{headerShown:false}} />
     </Stack.Navigator>
   );
 };

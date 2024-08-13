@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>This is a change in Aditya's branch</Text>
+      
       <StatusBar style="auto" />
     </View>
   );
@@ -13,8 +13,9 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFDD0',
     alignItems: 'center',
     justifyContent: 'center',
   },
 });
+

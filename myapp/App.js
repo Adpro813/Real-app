@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, Button, TextInput } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -18,8 +18,8 @@ export default function App() {
 const LoadingScreen = ({ navigation }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigation.replace('Home Screen');
-    }, 3000);
+      navigation.replace('Start Screen');
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, [navigation]);
@@ -34,18 +34,65 @@ const LoadingScreen = ({ navigation }) => {
   );
 };
 
-const HomeScreen = () => {
+function StartScreen ({navigation}) {
   return (
     <View style={styles.container}>
-      <Text>Home Screen</Text>
+      <View style={styles.buttonContainer}> 
+        <Button
+          title = "Log in"
+          onPress={() => navigation.navigate('LogInScreen')} 
+        />
+      </View>
     </View>
   );
 };
+
+const LogInScreen = ({navigation}) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  return (
+  <View style={styles.container}> 
+    <Text>Login</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+
+        value={email}
+        onChangeText={setEmail}
+      />  
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        secureTextEntry 
+        value={password}
+        onChangeText={setPassword}
+      />
+      <View style ={styles.buttonContainer}>
+        <Button
+          title = "Continue"
+          onPress={() => navigation.navigate('HomeScreen')}
+        />
+      </View>
+  </View>
+  );
+}
+
+const HomeScreen = () => {
+  return (
+  <View style={styles.container}> 
+    <Text>
+      Home Screen
+    </Text>
+  </View>
+  );
+}
 
 const AppNavigator = () => {
   return (
     <Stack.Navigator initialRouteName="LoadingScreen">
       <Stack.Screen name="LoadingScreen" component={LoadingScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Start Screen" component={StartScreen} options = {{headerShown:false}} />
+      <Stack.Screen name="LogInScreen" component={LogInScreen} options = {{headerShown:false}} />
       <Stack.Screen name="Home Screen" component={HomeScreen} options = {{headerShown:false}} />
     </Stack.Navigator>
   );
@@ -57,5 +104,25 @@ const styles = StyleSheet.create({
     backgroundColor: '#FAF0E6',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+
+  buttonContainer: {
+    backgroundColor: '#c2d6f6',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 10, 
+    padding: 10,
+  },
+
+  input: {
+    height: 40,
+    width: 200,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
   },
 });

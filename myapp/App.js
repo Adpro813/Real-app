@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     position: 'absolute',
     bottom: 0,
-    left: 5,
+    left: 20
   },
   input: {
     height: 40,

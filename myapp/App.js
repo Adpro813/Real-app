@@ -72,7 +72,7 @@ function LogInScreen({ navigation }) {
           style={styles.guestText}
           onPress={() => navigation.navigate('HomeScreen')}
         >
-          Continue as Guest
+         Guest
         </Text>
 
         <Text

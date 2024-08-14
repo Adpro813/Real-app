@@ -39,7 +39,15 @@ function LogInScreen({ navigation }) {
   const [password, setPassword] = useState('');
 
   return (
+    
     <View style={[styles.container, { backgroundColor: 'white' }]}>
+      <View style = {styles.logoContainer}>
+      <Image
+        source={require('./images/logo.webp')}
+        style={{ width: 180, height: 170,}}
+      />
+      </View>
+      <View style = {styles.formContainer}>
       <TextInput
         style={styles.input}
         placeholder="Username"
@@ -53,6 +61,7 @@ function LogInScreen({ navigation }) {
         value={password}
         onChangeText={setPassword}
       />
+      
       <TouchableOpacity
         style={styles.buttonContainer}
         onPress={() => navigation.navigate('HomeScreen')}
@@ -60,7 +69,7 @@ function LogInScreen({ navigation }) {
         <Text style={styles.logInText}>Log in</Text>
       </TouchableOpacity>
 
-      <Text 
+      <Text
         style={styles.guestText}
         onPress={() => navigation.navigate("HomeScreen")}
       >
@@ -70,6 +79,7 @@ function LogInScreen({ navigation }) {
       onPress = {() => navigation.navigate('SignUpScreen')}>
         Sign Up
       </Text>
+      </View>
     </View>
   );
 }
@@ -107,6 +117,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#FAF0E6',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingBottom: 20, // Adds padding at the bottom, pushing everything up
+  },
+  logoContainer: {
+    flex: 2,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    width: '100%',
+  },
+  formContainer: {
+    flex: 2,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+    marginTop: 15
   },
   logInText: {
     color: 'white',
@@ -114,19 +139,21 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   buttonContainer: {
+    width: 200,
     backgroundColor: 'rgb(135,206,235)',
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
     borderRadius: 10,
     padding: 10,
+    marginTop:20
   },
   guestText: {
     color: 'black',
     fontWeight: 'bold',
     fontSize: 14,
     position: 'absolute',
-    bottom: 20,
+    bottom: 0,
     left: 5,
   },
   input: {
@@ -140,10 +167,10 @@ const styles = StyleSheet.create({
   },
   signUpText: {
     fontSize: 16,
-    fontColor: 'gray',
+    color: 'black',
     fontWeight: 'bold',
-    bottom: 20,
-    right: 20,
     position: 'absolute',
+    bottom: 0,
+    right: 20,
   },
 });

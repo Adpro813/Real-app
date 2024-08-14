@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, Button, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Image, Button, TextInput, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -34,51 +34,48 @@ const LoadingScreen = ({ navigation }) => {
   );
 };
 
-function StartScreen ({navigation}) {
+function LogInScreen({ navigation }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: 'white' }]}>
       <TextInput
         style={styles.input}
         placeholder="Username"
-
         value={username}
         onChangeText={setUsername}
-      />  
+      />
       <TextInput
         style={styles.input}
         placeholder="Password"
-        secureTextEntry 
+        secureTextEntry
         value={password}
         onChangeText={setPassword}
       />
-      <View style={styles.buttonContainer}> 
-        <Button
-          title = "Log in"
-          onPress={() => navigation.navigate('HomeScreen')} 
-        />
-      </View>
+      <TouchableOpacity
+        style={styles.buttonContainer}
+        onPress={() => navigation.navigate('HomeScreen')}
+      >
+        <Text style={styles.logInText}>Log in</Text>
+      </TouchableOpacity>
     </View>
-  );
-};
-
-const HomeScreen = ({navigation}) => {
-
-  return (
-  <View style={styles.container}> 
-    <Text> Home Screen </Text>
-  </View>
   );
 }
 
+const HomeScreen = ({ navigation }) => {
+  return (
+    <View style={styles.container}>
+      <Text>Home Screen</Text>
+    </View>
+  );
+}
 
 const AppNavigator = () => {
   return (
     <Stack.Navigator initialRouteName="LoadingScreen">
       <Stack.Screen name="LoadingScreen" component={LoadingScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Start Screen" component={StartScreen} options = {{headerShown:false}} />
-      <Stack.Screen name="HomeScreen" component={HomeScreen} options = {{headerShown:false}} />
+      <Stack.Screen name="Start Screen" component={LogInScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 };
@@ -90,17 +87,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
+  logInText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   buttonContainer: {
-    backgroundColor: '#c2d6f6',
+    backgroundColor: 'rgb(135,206,235)',
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 10, 
+    borderRadius: 10,
     padding: 10,
   },
-
   input: {
     height: 40,
     width: 200,

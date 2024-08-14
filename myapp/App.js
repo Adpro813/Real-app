@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -71,7 +71,7 @@ function LogInScreen({ navigation }) {
         style={styles.guestText}
         onPress={() => navigation.navigate("HomeScreen")}
       >
-        Continue as Guest
+        Guest
       </Text>
     </View>
   );
@@ -85,11 +85,64 @@ const HomeScreen = ({ navigation }) => {
   );
 }
 
-const SignUpScreen = ({ navigation }) => {
-  return (
-    <View style={styles.container}>
-      <Text>Sign Up Screen</Text>
-    </View>
+const SignUpScreen = ({navigation}) => {
+return(
+  <View style={[styles.container, { backgroundColor: 'white' }]}>
+      <TouchableOpacity
+        style={styles.buttonContainer}
+        onPress={() => navigation.navigate('InformationScreen')}
+      >
+        <Text style={styles.logInText}>Set Up Account</Text>
+      </TouchableOpacity>
+  </View>
+);
+}
+
+const InformationScreen = ({navigation}) => {
+  const [birthday, setBirthday] = useState('');
+  return(
+    <View style={[styles.container, { backgroundColor: 'white' }]}>
+      <TextInput
+        style={styles.input}
+        placeholder="MM/DD/YYYY"
+        value={birthday}
+        onChangeText={setBirthday}
+      />
+      <TouchableOpacity
+        style={styles.buttonContainer}
+        onPress={() => navigation.navigate('UsernamePasswordScreen')}
+      >
+        <Text style={styles.logInText}>Continue</Text>
+      </TouchableOpacity>
+  </View>
+  );
+}
+
+const UsernamePasswordScreen = ({navigation}) => {
+  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
+  return(
+  <View style={[styles.container, { backgroundColor: 'white' }]}>
+    <TextInput
+        style={styles.input}
+        placeholder="Username"
+        value={username}
+        onChangeText={setUsername}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        secureTextEntry
+        value={password}
+        onChangeText={setPassword}
+      />
+      <TouchableOpacity
+        style={styles.buttonContainer}
+        onPress={() => navigation.navigate('Start Screen')}
+      >
+        <Text style={styles.logInText}>Continue</Text>
+      </TouchableOpacity>
+  </View>
   );
 }
 
@@ -100,6 +153,9 @@ const AppNavigator = () => {
       <Stack.Screen name="Start Screen" component={LogInScreen} options={{ headerShown: false }} />
       <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
       <Stack.Screen name="SignUpScreen" component={SignUpScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="InformationScreen" component={InformationScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="UsernamePasswordScreen" component={UsernamePasswordScreen} options={{ headerShown: false }} />
+
     </Stack.Navigator>
   );
 };
@@ -117,6 +173,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   buttonContainer: {
+    width: 200,
     backgroundColor: 'rgb(135,206,235)',
     alignItems: 'center',
     justifyContent: 'center',
@@ -127,17 +184,17 @@ const styles = StyleSheet.create({
   guestText: {
     color: 'black',
     fontWeight: 'bold',
-    fontSize: 14,
+    fontSize: 16,
     position: 'absolute',
     bottom: 20,
-    left: 5,
+    left: 25,
   },
   input: {
     height: 40,
     width: 200,
     borderColor: 'gray',
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: 1,
     padding: 10,
     marginBottom: 10,
   },
@@ -146,7 +203,7 @@ const styles = StyleSheet.create({
     fontColor: 'gray',
     fontWeight: 'bold',
     bottom: 20,
-    right: 20,
+    right: 30,
     position: 'absolute',
   },
 });

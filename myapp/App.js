@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, Button, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -37,6 +37,7 @@ const LoadingScreen = ({ navigation }) => {
 function LogInScreen({ navigation }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
   return (
     <View style={[styles.container, { backgroundColor: 'white' }]}>
       <TextInput
@@ -58,6 +59,13 @@ function LogInScreen({ navigation }) {
       >
         <Text style={styles.logInText}>Log in</Text>
       </TouchableOpacity>
+
+      <Text 
+        style={styles.guestText}
+        onPress={() => navigation.navigate("HomeScreen")}
+      >
+        Continue as Guest
+      </Text>
     </View>
   );
 }
@@ -99,6 +107,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     padding: 10,
+  },
+  guestText: {
+    color: 'black',
+    fontWeight: 'bold',
+    fontSize: 14,
+    position: 'absolute',
+    bottom: 20,
+    left: 5,
   },
   input: {
     height: 40,

@@ -68,13 +68,19 @@ function LogInScreen({ navigation }) {
       >
         <Text style={styles.logInText}>Log in</Text>
       </TouchableOpacity>
+      
+      <Text 
+      style={styles.signUpText}
+      onPress = {() => navigation.navigate('SignUpScreen')}
+      >
+        Sign Up
+      </Text>
 
       <Text
         style={styles.guestText}
         onPress={() => navigation.navigate("HomeScreen")}
       >
         Continue as Guest
-      </Text>
       <Text style={styles.signUpText}
       onPress = {() => navigation.navigate('SignUpScreen')}>
         Sign Up
@@ -196,7 +202,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: 200,
-    width: 200,
     backgroundColor: 'rgb(135,206,235)',
     alignItems: 'center',
     justifyContent: 'center',
@@ -210,7 +215,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
     position: 'absolute',
-    bottom: 0,
+    bottom: 20,
     left: 5,
   },
   input: {
@@ -226,6 +231,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'black',
     fontWeight: 'bold',
+   
     position: 'absolute',
     bottom: 0,
     right: 20,

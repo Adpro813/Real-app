@@ -66,6 +66,10 @@ function LogInScreen({ navigation }) {
       >
         Continue as Guest
       </Text>
+      <Text style={styles.signUpText}
+      onPress = {() => navigation.navigate('SignUpScreen')}>
+        Sign Up
+      </Text>
     </View>
   );
 }
@@ -78,12 +82,21 @@ const HomeScreen = ({ navigation }) => {
   );
 }
 
+const SignUpScreen = ({ navigation }) => {
+  return (
+    <View style={styles.container}>
+      <Text>Sign Up Screen</Text>
+    </View>
+  );
+}
+
 const AppNavigator = () => {
   return (
     <Stack.Navigator initialRouteName="LoadingScreen">
       <Stack.Screen name="LoadingScreen" component={LoadingScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Start Screen" component={LogInScreen} options={{ headerShown: false }} />
       <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="SignUpScreen" component={SignUpScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 };
@@ -124,5 +137,13 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginBottom: 10,
+  },
+  signUpText: {
+    fontSize: 16,
+    fontColor: 'gray',
+    fontWeight: 'bold',
+    bottom: 20,
+    right: 20,
+    position: 'absolute',
   },
 });

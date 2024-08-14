@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Button } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -39,52 +39,48 @@ function LogInScreen({ navigation }) {
   const [password, setPassword] = useState('');
 
   return (
-    
     <View style={[styles.container, { backgroundColor: 'white' }]}>
-      <View style = {styles.logoContainer}>
-      <Image
-        source={require('./images/logo.webp')}
-        style={{ width: 180, height: 170,}}
-      />
+      <View style={styles.logoContainer}>
+        <Image
+          source={require('./images/logo.webp')}
+          style={{ width: 180, height: 170 }}
+        />
       </View>
-      <View style = {styles.formContainer}>
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-      
-      <TouchableOpacity
-        style={styles.buttonContainer}
-        onPress={() => navigation.navigate('HomeScreen')}
-      >
-        <Text style={styles.logInText}>Log in</Text>
-      </TouchableOpacity>
-      
-      <Text 
-      style={styles.signUpText}
-      onPress = {() => navigation.navigate('SignUpScreen')}
-      >
-        Sign Up
-      </Text>
+      <View style={styles.formContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
+          value={username}
+          onChangeText={setUsername}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+        />
 
-      <Text
-        style={styles.guestText}
-        onPress={() => navigation.navigate("HomeScreen")}
-      >
-        Continue as Guest
-      <Text style={styles.signUpText}
-      onPress = {() => navigation.navigate('SignUpScreen')}>
-        Sign Up
-      </Text>
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={() => navigation.navigate('HomeScreen')}
+        >
+          <Text style={styles.logInText}>Log in</Text>
+        </TouchableOpacity>
+
+        <Text
+          style={styles.guestText}
+          onPress={() => navigation.navigate('HomeScreen')}
+        >
+          Continue as Guest
+        </Text>
+
+        <Text
+          style={styles.signUpText}
+          onPress={() => navigation.navigate('SignUpScreen')}
+        >
+          Sign Up
+        </Text>
       </View>
     </View>
   );
@@ -96,24 +92,24 @@ const HomeScreen = ({ navigation }) => {
       <Text>Home Screen</Text>
     </View>
   );
-}
+};
 
-const SignUpScreen = ({navigation}) => {
-return(
-  <View style={[styles.container, { backgroundColor: 'white' }]}>
+const SignUpScreen = ({ navigation }) => {
+  return (
+    <View style={[styles.container, { backgroundColor: 'white' }]}>
       <TouchableOpacity
         style={styles.buttonContainer}
         onPress={() => navigation.navigate('InformationScreen')}
       >
         <Text style={styles.logInText}>Set Up Account</Text>
       </TouchableOpacity>
-  </View>
-);
-}
+    </View>
+  );
+};
 
-const InformationScreen = ({navigation}) => {
+const InformationScreen = ({ navigation }) => {
   const [birthday, setBirthday] = useState('');
-  return(
+  return (
     <View style={[styles.container, { backgroundColor: 'white' }]}>
       <TextInput
         style={styles.input}
@@ -127,16 +123,16 @@ const InformationScreen = ({navigation}) => {
       >
         <Text style={styles.logInText}>Continue</Text>
       </TouchableOpacity>
-  </View>
+    </View>
   );
-}
+};
 
-const UsernamePasswordScreen = ({navigation}) => {
+const UsernamePasswordScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
-  return(
-  <View style={[styles.container, { backgroundColor: 'white' }]}>
-    <TextInput
+  return (
+    <View style={[styles.container, { backgroundColor: 'white' }]}>
+      <TextInput
         style={styles.input}
         placeholder="Username"
         value={username}
@@ -155,9 +151,9 @@ const UsernamePasswordScreen = ({navigation}) => {
       >
         <Text style={styles.logInText}>Continue</Text>
       </TouchableOpacity>
-  </View>
+    </View>
   );
-}
+};
 
 const AppNavigator = () => {
   return (
@@ -168,7 +164,6 @@ const AppNavigator = () => {
       <Stack.Screen name="SignUpScreen" component={SignUpScreen} options={{ headerShown: false }} />
       <Stack.Screen name="InformationScreen" component={InformationScreen} options={{ headerShown: false }} />
       <Stack.Screen name="UsernamePasswordScreen" component={UsernamePasswordScreen} options={{ headerShown: false }} />
-
     </Stack.Navigator>
   );
 };
@@ -208,14 +203,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     padding: 10,
-    marginTop:20
+    marginTop: 20
   },
   guestText: {
     color: 'black',
     fontWeight: 'bold',
     fontSize: 16,
     position: 'absolute',
-    bottom: 20,
+    bottom: 0,
     left: 5,
   },
   input: {
@@ -231,7 +226,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'black',
     fontWeight: 'bold',
-   
     position: 'absolute',
     bottom: 0,
     right: 20,

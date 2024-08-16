@@ -86,7 +86,7 @@ function LogInScreen({ navigation }) {
 
 const HomeScreen = ({ navigation }) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: 'white' }]}>
       <Text>Home Screen</Text>
     </View>
   );

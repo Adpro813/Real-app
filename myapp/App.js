@@ -283,6 +283,5 @@ const styles = StyleSheet.create({
     padding: 10,
     position: 'absolute',
     right: 5, 
-    transfrom: [{ translateY: -12}],
    },
 });

@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'reac
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { initializeApp } from 'firebase/app';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const firebaseConfig = {
@@ -18,7 +18,6 @@ const firebaseConfig = {
   measurementId: "G-62EM31RF55"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
@@ -35,11 +34,19 @@ export default function App() {
 
 const LoadingScreen = ({ navigation }) => {
   useEffect(() => {
-    const timer = setTimeout(() => {
-      navigation.replace('Start Screen');
-    }, 1000);
+    const checkAuthStatus = async () => {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
+          navigation.replace('HomeScreen');
+        } else {
+          navigation.replace('Start Screen');
+        }
+      });
 
-    return () => clearTimeout(timer);
+      return () => unsubscribe(); 
+    };
+
+    checkAuthStatus();
   }, [navigation]);
 
   return (
@@ -137,8 +144,6 @@ const HomeScreen = () => {
   );
 }
 
-
-
 const UsernamePasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -188,8 +193,7 @@ const UsernamePasswordScreen = ({ navigation }) => {
         </View>
         <TouchableOpacity
           style={styles.buttonContainer}
-          
-          onPress={handleSignUp}
+            onPress={handleSignUp}
         >
           <Text style={styles.logInText}>Sign Up</Text>
         </TouchableOpacity>

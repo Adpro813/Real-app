@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { initializeApp } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAw-YNYT_dLd2zzi4fP3x3Fzz4k1oojSFg",
@@ -61,6 +62,7 @@ const LoadingScreen = ({ navigation }) => {
 function LogInScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState('');
 
   const handleLogin = async () => {
     try {
@@ -71,6 +73,10 @@ function LogInScreen({ navigation }) {
     }
   };
 
+  const defineVisiblity = () => {
+    setShowPassword(!showPassword);
+  }
+
   return (
     <View style={[styles.container, { backgroundColor: 'white' }]}>
       <View style={styles.logoContainer}>
@@ -80,20 +86,32 @@ function LogInScreen({ navigation }) {
         />
       </View>
       <View style={styles.formContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-        />
-
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            secureTextEntry={!showPassword}
+            value={password}
+            onChangeText={setPassword}
+          />
+          <TouchableOpacity 
+            style={styles.iconContainer}
+            onPress = {defineVisiblity}>
+            <Icon
+            name="visibility" 
+            size = {24}
+            color = 'gray'
+          />
+        </TouchableOpacity>
+        </View>
         <TouchableOpacity
           style={styles.buttonContainer}
           onPress={handleLogin}
@@ -105,7 +123,7 @@ function LogInScreen({ navigation }) {
           style={styles.guestText}
           onPress={() => navigation.navigate("HomeScreen")}
         >
-          Continue as Guest
+          Guest
         </Text>
         <Text
           style={styles.signUpText}
@@ -120,7 +138,7 @@ function LogInScreen({ navigation }) {
 
 const HomeScreen = () => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: 'white' }]}>
       <Text>Home Screen</Text>
     </View>
   );
@@ -129,6 +147,8 @@ const HomeScreen = () => {
 const UsernamePasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState('');
+
 
   const handleSignUp = async () => {
     try {
@@ -139,27 +159,45 @@ const UsernamePasswordScreen = ({ navigation }) => {
     }
   };
 
+  const defineVisiblity = () => {
+    setShowPassword(!showPassword);
+  }
+
   return (
     <View style={[styles.container, { backgroundColor: 'white' }]}>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-      <TouchableOpacity
-        style={styles.buttonContainer}
-        onPress={handleSignUp}
-      >
-        <Text style={styles.logInText}>Sign Up</Text>
-      </TouchableOpacity>
+      <View style = {styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+        />
+      </View>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry={!showPassword}
+          value={password}
+          onChangeText={setPassword}
+        />
+        <TouchableOpacity 
+          style={styles.iconContainer}
+          onPress = {defineVisiblity}>
+          <Icon
+          name="visibility" 
+          size = {24}
+          color = 'gray'
+        />
+        </TouchableOpacity>
+        </View>
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          
+          onPress={handleSignUp}
+        >
+          <Text style={styles.logInText}>Sign Up</Text>
+        </TouchableOpacity>
     </View>
   );
 }
@@ -220,14 +258,19 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 5,
   },
+  inputContainer: {
+    position: 'relative',
+    width: 200, 
+    marginBottom: 7,
+  },
   input: {
     height: 40,
-    width: 200,
+    width: '100%', 
     borderColor: 'gray',
     borderWidth: 1,
     borderRadius: 1,
     padding: 10,
-    marginBottom: 10,
+    paddingRight: 40,
   },
   signUpText: {
     fontSize: 16,
@@ -237,4 +280,9 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 20,
   },
+  iconContainer: {
+    padding: 10,
+    position: 'absolute',
+    right: 5, 
+   },
 });

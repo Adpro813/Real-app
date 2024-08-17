@@ -107,7 +107,7 @@ function LogInScreen({ navigation }) {
             onPress = {defineVisiblity}>
             <Icon
             name="visibility" 
-            size = {24}
+            size = {20}
             color = 'gray'
           />
         </TouchableOpacity>

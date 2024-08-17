@@ -137,9 +137,23 @@ function LogInScreen({ navigation }) {
 }
 
 const HomeScreen = () => {
+  const [ingredient, setIngredient] = useState('')
   return (
-    <View style={[styles.container, { backgroundColor: 'white' }]}>
-      <Text>Home Screen</Text>
+    <View style={[styles.homeScreenContainer, { backgroundColor: 'white' }]}>
+      <View style={styles.searchBar}>
+        <TextInput
+          style={styles.input}
+          placeholder="Search Ingredient"
+          value={ingredient}
+          onChangeText={setIngredient}
+        />
+        <Icon
+          style={styles.iconContainer}
+          name="search" 
+          size = {20}
+          color = 'gray'
+        />
+      </View>
     </View>
   );
 }
@@ -284,4 +298,17 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 5, 
    },
+   homeScreenContainer: {
+    flex: 1, 
+    backgroundColor: '#FAF0E6',
+    alignItems: 'flex-left',
+    justifyContent: 'flex-top',
+    paddingTop: 35,
+    paddingLeft: 11,
+   },
+   searchBar: {
+    position: 'relative',
+    width: 350, 
+    marginBottom: 7,
+   }
 });

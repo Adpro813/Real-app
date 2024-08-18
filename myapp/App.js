@@ -139,22 +139,27 @@ function LogInScreen({ navigation }) {
 const HomeScreen = () => {
   const [ingredient, setIngredient] = useState('')
   return (
+  <View>
     <View style={[styles.homeScreenContainer, { backgroundColor: 'white' }]}>
       <View style={styles.searchBar}>
         <TextInput
-          style={styles.input}
+          style={[styles.input, {paddingLeft: 30}]}
           placeholder="Search Ingredient"
           value={ingredient}
           onChangeText={setIngredient}
         />
         <Icon
-          style={styles.iconContainer}
+          style={[styles.iconContainer, {right: 312}]}
           name="search" 
           size = {20}
           color = 'gray'
         />
-      </View>
+     </View>
     </View>
+    <View styles={styles.box}>
+        <Text style={styles.subTitle}>Ingredients</Text>
+    </View>
+  </View>
   );
 }
 
@@ -310,5 +315,21 @@ const styles = StyleSheet.create({
     position: 'relative',
     width: 350, 
     marginBottom: 7,
-   }
+   },
+   subTitle: {
+    fontSize: 23,
+    color: '#666',
+    marginTop: 55
+    ,
+    paddingLeft: 13,
+    letterSpacing: 0.25,
+   },
+   box: {
+    flex:1, 
+    justifyContent: 'center',
+    alignItems: 'center', 
+    backgroundColor: 'black',
+    padding: 20, 
+    borderRadius: 10, 
+   },
 });

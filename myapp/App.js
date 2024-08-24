@@ -138,15 +138,53 @@ function LogInScreen({ navigation }) {
 
 const HomeScreen = () => {
   const [ingredient, setIngredient] = useState('')
+  const [recipes, setRecipes] = useState([]);
+  const [inputText, setInputText] = useState('');
+  const [showAddedMessage, setShowAddedMessage] = useState(false);
+  const fetchRecipes = async () =>{
+    try{
+      const response = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredient}&apiKey=1486f6ee64af433c9fb1d20d41e49e2a`);
+      console.log(response)
+      const data = await response.json();
+      console.log(data);
+      setRecipes(data);
+    }
+    catch
+    {
+      console.log("fricking error with searching for ingreds boi")
+    }
+  }
+  //timer for the adding message
+  useEffect(() => {
+    let timeoutID;
+    if(showAddedMessage) {
+      timeoutID = setTimeout(() => {
+        setShowAddedMessage(false);
+      }, 1000);
+    }
+    return () => {
+      clearTimeout(timeoutID);
+    };
+  }, [showAddedMessage]);
+  
   return (
-  <View>
-    <View style={[styles.homeScreenContainer, { backgroundColor: 'white' }]}>
+  <View style = {styles.homeScreenContainer}>
+    <View style={[styles.searchBarContainer, { backgroundColor: 'white' }]}>
       <View style={styles.searchBar}>
         <TextInput
           style={[styles.input, {paddingLeft: 30}]}
           placeholder="Search Ingredient"
-          value={ingredient}
-          onChangeText={setIngredient}
+          value={inputText}
+          onChangeText={setInputText}
+          onKeyPress={(event) => {
+            console.log("Key pressed:", event.nativeEvent.key); 
+            if(event.nativeEvent.key === 'Enter'){
+              value={ingredient}
+              setIngredient(inputText)
+              setInputText('')
+              fetchRecipes();
+            }
+          }}
         />
         <Icon
           style={[styles.iconContainer, {right: 312}]}
@@ -156,12 +194,148 @@ const HomeScreen = () => {
         />
      </View>
     </View>
-    <View styles={styles.box}>
-        <Text style={styles.subTitle}>Ingredients</Text>
+    {/*This is the bigger recipeContainer, aditya work here */}
+    <View style = {styles.recipeContainer}>
+    {recipes.map((recipe) => {
+    console.log(recipe);
+    })}
+    {/* This is the conformation, ansh work here */}
+    <View style={styles.conformationContainer}>
+      {ingredient ? (
+        {showAddedMessage} (
+          <Text style={styles.conformationText}>
+          {ingredient} added
+          </Text>
+        )
+        ) : null
+        }
+    </View>
     </View>
   </View>
   );
 }
+
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#FAF0E6',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 20,
+  },
+  logoContainer: {
+    flex: 2,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    width: '100%',
+  },
+  formContainer: {
+    flex: 2,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+    marginTop: 15,
+  },
+  logInText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  buttonContainer: {
+    width: 200,
+    backgroundColor: 'rgb(135,206,235)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 10,
+    marginTop: 20,
+  },
+  guestText: {
+    color: 'black',
+    fontWeight: 'bold',
+    fontSize: 16,
+    position: 'absolute',
+    bottom: 0,
+    left: 5,
+  },
+  inputContainer: {
+    position: 'relative',
+    width: 200, 
+    marginBottom: 7,
+  },
+  input: {
+    height: 40,
+    width: '100%', 
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 1,
+    padding: 10,
+    paddingRight: 40,
+  },
+  signUpText: {
+    fontSize: 16,
+    color: 'black',
+    fontWeight: 'bold',
+    position: 'absolute',
+    bottom: 0,
+    right: 20,
+  }, 
+  iconContainer: {
+    padding: 10,
+    position: 'absolute',
+    right: 5, 
+   },
+   searchBarContainer: {
+    flex: 2, 
+    backgroundColor: '#FAF0E6',
+    alignItems: 'flex-left',
+    justifyContent: 'flex-top',
+    paddingTop: 35,
+    paddingLeft: 11,
+   },
+   searchBar: {
+    position: 'relative',
+    width: 350, 
+    marginBottom: 7,
+   },
+   subTitle: {
+    fontSize: 23,
+    color: '#666',
+    marginTop: 55,
+    paddingLeft: 13,
+    letterSpacing: 0.25,
+   },
+   conformationContainer: {
+    position:'absolute',
+    bottom:20,
+    height: 40,
+    width: 150,
+    borderRadius: 10,
+    borderColor: 'gray',
+    backgroundColor: '#ADD8E6',
+    justifyContent: 'center',
+    alignItems: 'center',
+   },
+   conformationText: {
+    position: 'relative',
+    fontSize: 18, 
+    color: "#666",
+   },
+   homeScreenContainer: {
+    flex:1,
+    backgroundColor: 'grey',
+   },
+   recipeContainer: {
+    flex:4,
+    justifyContent: 'flex-bottom',
+    alignItems: 'center'
+
+   }
+});
 
 const UsernamePasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -230,106 +404,3 @@ const AppNavigator = () => {
     </Stack.Navigator>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FAF0E6',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingBottom: 20,
-  },
-  logoContainer: {
-    flex: 2,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    width: '100%',
-  },
-  formContainer: {
-    flex: 2,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    width: '100%',
-    height: '100%',
-    marginTop: 15,
-  },
-  logInText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  buttonContainer: {
-    width: 200,
-    backgroundColor: 'rgb(135,206,235)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 10,
-    marginTop: 20,
-  },
-  guestText: {
-    color: 'black',
-    fontWeight: 'bold',
-    fontSize: 16,
-    position: 'absolute',
-    bottom: 0,
-    left: 5,
-  },
-  inputContainer: {
-    position: 'relative',
-    width: 200, 
-    marginBottom: 7,
-  },
-  input: {
-    height: 40,
-    width: '100%', 
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 1,
-    padding: 10,
-    paddingRight: 40,
-  },
-  signUpText: {
-    fontSize: 16,
-    color: 'black',
-    fontWeight: 'bold',
-    position: 'absolute',
-    bottom: 0,
-    right: 20,
-  },
-  iconContainer: {
-    padding: 10,
-    position: 'absolute',
-    right: 5, 
-   },
-   homeScreenContainer: {
-    flex: 1, 
-    backgroundColor: '#FAF0E6',
-    alignItems: 'flex-left',
-    justifyContent: 'flex-top',
-    paddingTop: 35,
-    paddingLeft: 11,
-   },
-   searchBar: {
-    position: 'relative',
-    width: 350, 
-    marginBottom: 7,
-   },
-   subTitle: {
-    fontSize: 23,
-    color: '#666',
-    marginTop: 55
-    ,
-    paddingLeft: 13,
-    letterSpacing: 0.25,
-   },
-   box: {
-    flex:1, 
-    justifyContent: 'center',
-    alignItems: 'center', 
-    backgroundColor: 'black',
-    padding: 20, 
-    borderRadius: 10, 
-   },
-});

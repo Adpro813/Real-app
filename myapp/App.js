@@ -6,6 +6,23 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { initializeApp } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+/*
+TODO ADITYA: 
+-figure out how to redner the api call. (check if the api call even works
+
+)
+TODO ANSH: 
+-figure out new styling methods
+-figure out how to make the text and confirmation tingy look better
+-maybe dabble in some shadows things. not sure if that will imporve. 
+TODO IN GENERAL:
+-have the wholle searching situation work
+-make it so they can inpiut a list of ings (not just one), right now were using a string as an input
+-blend the whole stylkng together
+-make the output look better (the layout of the homescreen)
+
+*/
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyAw-YNYT_dLd2zzi4fP3x3Fzz4k1oojSFg",
@@ -17,7 +34,6 @@ const firebaseConfig = {
   appId: "1:655198709057:web:8074b6e7c5d9b734faedc0",
   measurementId: "G-62EM31RF55"
 };
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
@@ -43,7 +59,7 @@ const LoadingScreen = ({ navigation }) => {
         }
       });
 
-      return () => unsubscribe(); 
+      return () => unsubscribe();
     };
 
     checkAuthStatus();
@@ -58,12 +74,11 @@ const LoadingScreen = ({ navigation }) => {
     </View>
   );
 };
-
+//no need to touch 
 function LogInScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState('');
-
   const handleLogin = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
@@ -102,15 +117,15 @@ function LogInScreen({ navigation }) {
             value={password}
             onChangeText={setPassword}
           />
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.iconContainer}
-            onPress = {defineVisiblity}>
+            onPress={defineVisiblity}>
             <Icon
-            name="visibility" 
-            size = {20}
-            color = 'gray'
-          />
-        </TouchableOpacity>
+              name="visibility"
+              size={20}
+              color='gray'
+            />
+          </TouchableOpacity>
         </View>
         <TouchableOpacity
           style={styles.buttonContainer}
@@ -135,87 +150,91 @@ function LogInScreen({ navigation }) {
     </View>
   );
 }
-
+//Home screen, where most of the work is done, currently workng on it right now
 const HomeScreen = () => {
   const [ingredient, setIngredient] = useState('')
   const [recipes, setRecipes] = useState([]);
   const [inputText, setInputText] = useState('');
   const [showAddedMessage, setShowAddedMessage] = useState(false);
-  const fetchRecipes = async () =>{
-    try{
-      const response = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredient}&apiKey=1486f6ee64af433c9fb1d20d41e49e2a`);
-      console.log(response)
+  //api call to get the recipes in a array
+  const fetchRecipes = async () => {
+    try {
+      const response = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredient}&number=5&apiKey=1486f6ee64af433c9fb1d20d41e49e2a`);
       const data = await response.json();
+      console.log(response);
       console.log(data);
       setRecipes(data);
+    } catch (error) {
+      console.log("Error fetching recipes:", error.message);
     }
-    catch
-    {
-      console.log("fricking error with searching for ingreds boi")
-    }
-  }
-  //timer for the adding message
+  };
+  
   useEffect(() => {
     let timeoutID;
-    if(showAddedMessage) {
+    if (showAddedMessage) {
       timeoutID = setTimeout(() => {
         setShowAddedMessage(false);
-      }, 1000);
+      }, 2000);
     }
     return () => {
       clearTimeout(timeoutID);
     };
   }, [showAddedMessage]);
-  
+
+  useEffect(() => {
+    if (ingredient) {
+      fetchRecipes();
+    }
+  }, [ingredient]);
+
+  function searchRecipes() {
+    setIngredient(inputText);
+    setInputText('');
+    setShowAddedMessage(true);
+  }
+
   return (
-  <View style = {styles.homeScreenContainer}>
-    <View style={[styles.searchBarContainer, { backgroundColor: 'white' }]}>
-      <View style={styles.searchBar}>
-        <TextInput
-          style={[styles.input, {paddingLeft: 30}]}
-          placeholder="Search Ingredient"
-          value={inputText}
-          onChangeText={setInputText}
-          onKeyPress={(event) => {
-            console.log("Key pressed:", event.nativeEvent.key); 
-            if(event.nativeEvent.key === 'Enter'){
-              value={ingredient}
-              setIngredient(inputText)
-              setInputText('')
-              fetchRecipes();
-            }
-          }}
-        />
-        <Icon
-          style={[styles.iconContainer, {right: 312}]}
-          name="search" 
-          size = {20}
-          color = 'gray'
-        />
-     </View>
+    <View style={styles.homeScreenContainer}>
+      <View style={[styles.searchBarContainer, { backgroundColor: 'white' }]}>
+        <View style={styles.searchBar}>
+          <TextInput
+            style={[styles.input, { paddingLeft: 30 }]}
+            placeholder="Search Ingredient"
+            value={inputText}
+            onChangeText={setInputText}
+            onSubmitEditing={searchRecipes}
+          />
+          <Icon
+            style={[styles.iconContainer, { right: 312 }]}
+            name="search"
+            size={20}
+            color='gray'
+          />
+        </View>
+      </View>
+      {/*This is the bigger recipeContainer, aditya work here */}
+      <View style={styles.recipeContainer}>
+      {recipes.map((recipe) => (
+          <View key={recipe.id}>
+            <Image source={{ uri: recipe.image }}>
+            </Image>
+          </View>
+        ))}
+        {/* This is the conformation, ansh work here */}
+        {ingredient && showAddedMessage ? (
+          <View style={styles.conformationContainer}>
+            <Text style={styles.conformationText}>
+              {ingredient} added
+            </Text>
+          </View>
+
+        ) : null}
+      </View>
     </View>
-    {/*This is the bigger recipeContainer, aditya work here */}
-    <View style = {styles.recipeContainer}>
-    {recipes.map((recipe) => {
-    console.log(recipe);
-    })}
-    {/* This is the conformation, ansh work here */}
-    <View style={styles.conformationContainer}>
-      {ingredient ? (
-        {showAddedMessage} (
-          <Text style={styles.conformationText}>
-          {ingredient} added
-          </Text>
-        )
-        ) : null
-        }
-    </View>
-    </View>
-  </View>
   );
 }
 
-
+//styling aspects
 
 const styles = StyleSheet.create({
   container: {
@@ -264,12 +283,12 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     position: 'relative',
-    width: 200, 
+    width: 200,
     marginBottom: 7,
   },
   input: {
     height: 40,
-    width: '100%', 
+    width: '100%',
     borderColor: 'gray',
     borderWidth: 1,
     borderRadius: 1,
@@ -283,58 +302,61 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     right: 20,
-  }, 
+  },
   iconContainer: {
     padding: 10,
     position: 'absolute',
-    right: 5, 
-   },
-   searchBarContainer: {
-    flex: 2, 
+    right: 5,
+  },
+  searchBarContainer: {
+    flex: 2,
     backgroundColor: '#FAF0E6',
     alignItems: 'flex-left',
     justifyContent: 'flex-top',
     paddingTop: 35,
     paddingLeft: 11,
-   },
-   searchBar: {
+  },
+  searchBar: {
     position: 'relative',
-    width: 350, 
+    width: 350,
     marginBottom: 7,
-   },
-   subTitle: {
+  },
+  subTitle: {
     fontSize: 23,
     color: '#666',
     marginTop: 55,
     paddingLeft: 13,
     letterSpacing: 0.25,
-   },
-   conformationContainer: {
-    position:'absolute',
-    bottom:20,
+  },
+  conformationContainer: {
+    position: 'absolute',
+    bottom: 20,
     height: 40,
-    width: 150,
+    width: 170,
     borderRadius: 10,
-    borderColor: 'gray',
-    backgroundColor: '#ADD8E6',
+    borderColor: '#4CAF50',
+    backgroundColor: '#2E6F40', 
+    shadowColor: '#000', 
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
-   },
-   conformationText: {
+  },
+  conformationText: {
     position: 'relative',
-    fontSize: 18, 
-    color: "#666",
-   },
-   homeScreenContainer: {
-    flex:1,
+    fontSize: 18,
+    color: "#FCFBF4",
+  },
+  homeScreenContainer: {
+    flex: 1,
     backgroundColor: 'grey',
-   },
-   recipeContainer: {
-    flex:4,
+  },
+  recipeContainer: {
+    flex: 4,
     justifyContent: 'flex-bottom',
     alignItems: 'center'
-
-   }
+  }
 });
 
 const UsernamePasswordScreen = ({ navigation }) => {
@@ -358,7 +380,7 @@ const UsernamePasswordScreen = ({ navigation }) => {
 
   return (
     <View style={[styles.container, { backgroundColor: 'white' }]}>
-      <View style = {styles.inputContainer}>
+      <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
           placeholder="Email"
@@ -374,22 +396,22 @@ const UsernamePasswordScreen = ({ navigation }) => {
           value={password}
           onChangeText={setPassword}
         />
-        <TouchableOpacity 
-          style={styles.iconContainer}
-          onPress = {defineVisiblity}>
-          <Icon
-          name="visibility" 
-          size = {24}
-          color = 'gray'
-        />
-        </TouchableOpacity>
-        </View>
         <TouchableOpacity
-          style={styles.buttonContainer}
-            onPress={handleSignUp}
-        >
-          <Text style={styles.logInText}>Sign Up</Text>
+          style={styles.iconContainer}
+          onPress={defineVisiblity}>
+          <Icon
+            name="visibility"
+            size={24}
+            color='gray'
+          />
         </TouchableOpacity>
+      </View>
+      <TouchableOpacity
+        style={styles.buttonContainer}
+        onPress={handleSignUp}
+      >
+        <Text style={styles.logInText}>Sign Up</Text>
+      </TouchableOpacity>
     </View>
   );
 }

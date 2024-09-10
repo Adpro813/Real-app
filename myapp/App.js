@@ -1,3 +1,5 @@
+
+
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native';
@@ -5,7 +7,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { initializeApp } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import axios from 'axios';
+import Icon from ' react-native-vector-icons/MaterialIcons';
 /*
 TODO ADITYA: 
 -figure out how to redner the api call. (check if the api call even works
@@ -53,7 +56,7 @@ const LoadingScreen = ({ navigation }) => {
     const checkAuthStatus = async () => {
       const unsubscribe = onAuthStateChanged(auth, (user) => {
         if (user) {
-          navigation.replace('HomeScreen');
+          navigation.replace('Start Screen');
         } else {
           navigation.replace('Start Screen');
         }
@@ -74,7 +77,7 @@ const LoadingScreen = ({ navigation }) => {
     </View>
   );
 };
-//no need to touch 
+//no need to touch
 function LogInScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -159,16 +162,23 @@ const HomeScreen = () => {
   //api call to get the recipes in a array
   const fetchRecipes = async () => {
     try {
-      const response = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredient}&number=5&apiKey=1486f6ee64af433c9fb1d20d41e49e2a`);
-      const data = await response.json();
-      console.log(response);
+      const response = await axios.get(`https://api.spoonacular.com/recipes/findByIngredients`, {
+        params: {
+          ingredients: ingredient,
+          number: 5,
+          apiKey: 'f649ff29c7db47f0997943636ce3ab7d'
+        }
+      });
+      const data = response.data;
       console.log(data);
       setRecipes(data);
-    } catch (error) {
-      console.log("Error fetching recipes:", error.message);
     }
-  };
-  
+    catch
+    {
+      console.log("fricking error with searching for ingreds boi")
+    }
+  }
+  //timer for the adding message
   useEffect(() => {
     let timeoutID;
     if (showAddedMessage) {

@@ -1,17 +1,15 @@
-
-
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { initializeApp } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
 import axios from 'axios';
-import Icon from ' react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 /*
 TODO ADITYA: 
--figure out how to redner the api call. (check if the api call even works
+//render the list
 
 )
 TODO ANSH: 
@@ -23,6 +21,7 @@ TODO IN GENERAL:
 -make it so they can inpiut a list of ings (not just one), right now were using a string as an input
 -blend the whole stylkng together
 -make the output look better (the layout of the homescreen)
+
 
 */
 
@@ -56,7 +55,7 @@ const LoadingScreen = ({ navigation }) => {
     const checkAuthStatus = async () => {
       const unsubscribe = onAuthStateChanged(auth, (user) => {
         if (user) {
-          navigation.replace('Start Screen');
+          navigation.replace('HomeScreen');
         } else {
           navigation.replace('Start Screen');
         }
@@ -155,29 +154,31 @@ function LogInScreen({ navigation }) {
 }
 //Home screen, where most of the work is done, currently workng on it right now
 const HomeScreen = () => {
-  const [ingredient, setIngredient] = useState('')
+  const [ingredientsList, setIngriedientsList] = useState([])
   const [recipes, setRecipes] = useState([]);
   const [inputText, setInputText] = useState('');
   const [showAddedMessage, setShowAddedMessage] = useState(false);
+  const number = 5;
   //api call to get the recipes in a array
   const fetchRecipes = async () => {
+    const ingredientsString = ingredientsList.join(",");
+    console.log("ingredientsString: " + ingredientsString);
+    console.log("ingredientsList: " + ingredientsList);
+
     try {
       const response = await axios.get(`https://api.spoonacular.com/recipes/findByIngredients`, {
         params: {
-          ingredients: ingredient,
-          number: 5,
+          ingredients: ingredientsString,
+          number: number,
           apiKey: 'f649ff29c7db47f0997943636ce3ab7d'
         }
       });
-      const data = response.data;
-      console.log(data);
+      const data = response.data;  // Move this line inside the try block
       setRecipes(data);
+    } catch (error) {
+      console.log("Error searching for ingredients:", error);
     }
-    catch
-    {
-      console.log("fricking error with searching for ingreds boi")
-    }
-  }
+  };
   //timer for the adding message
   useEffect(() => {
     let timeoutID;
@@ -192,13 +193,22 @@ const HomeScreen = () => {
   }, [showAddedMessage]);
 
   useEffect(() => {
-    if (ingredient) {
+    if (ingredientsList.length > 0) {
       fetchRecipes();
     }
-  }, [ingredient]);
+  }, [ingredientsList]);
+
+  const data = Array.from({ length: number }, (_, index) => ({
+    key: 'Item ${index + 1}',
+  }));
+
+  const renderItem = (recipe) =>
+  {
+    
+  }
 
   function searchRecipes() {
-    setIngredient(inputText);
+    setIngriedientsList([...ingredientsList, inputText]);  // adds the new input text into the array
     setInputText('');
     setShowAddedMessage(true);
   }
@@ -209,7 +219,7 @@ const HomeScreen = () => {
         <View style={styles.searchBar}>
           <TextInput
             style={[styles.input, { paddingLeft: 30 }]}
-            placeholder="Search Ingredient"
+            placeholder="Search ingredientsList"
             value={inputText}
             onChangeText={setInputText}
             onSubmitEditing={searchRecipes}
@@ -223,18 +233,16 @@ const HomeScreen = () => {
         </View>
       </View>
       {/*This is the bigger recipeContainer, aditya work here */}
+      <FlatList
+        data={recipes}
+        renderItem={({ item }) => renderItem(item)}  // Pass the item to renderItem
+        keyExtractor={(item) => item.id.toString()}  // Use item instead of recipe
+      />
       <View style={styles.recipeContainer}>
-      {recipes.map((recipe) => (
-          <View key={recipe.id}>
-            <Image source={{ uri: recipe.image }}>
-            </Image>
-          </View>
-        ))}
-        {/* This is the conformation, ansh work here */}
-        {ingredient && showAddedMessage ? (
+        {ingredientsList && showAddedMessage ? (
           <View style={styles.conformationContainer}>
             <Text style={styles.conformationText}>
-              {ingredient} added
+              {ingredientsList} added
             </Text>
           </View>
 
@@ -345,8 +353,8 @@ const styles = StyleSheet.create({
     width: 170,
     borderRadius: 10,
     borderColor: '#4CAF50',
-    backgroundColor: '#2E6F40', 
-    shadowColor: '#000', 
+    backgroundColor: '#2E6F40',
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 5,

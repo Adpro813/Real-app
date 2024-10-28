@@ -21,4 +21,4 @@ To run the app locally:
    cd myapp
    npx expo start
    ```
-2. Run these commands.
+2. Enjoy.

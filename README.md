@@ -17,6 +17,7 @@ To run the app locally:
  1. Clone the repository and navigate to the project directory:
 
    ```
+   git clone https://github.com/Adpro813/Aroma
    npm install -g expo-cli 
    cd myapp
    npx expo start

@@ -1,16 +1,32 @@
-// components/HomeScreen.js
+
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import axios from 'axios';
 
+/**
+ * HomeScreen Component
+ * In progress, will change.
+ * HomeScreen allows users to search for recipes based on a list of ingredients.
+ * Users can add ingredients to a list, and the component fetches relevant recipes.
+ * 
+ */
 const HomeScreen = () => {
   const [ingredientsList, setIngredientsList] = useState([]);
-  const [recipes, setRecipes] = useState([]); // Retained for future use
-  const [inputText, setInputText] = useState('');
+  const [recipes, setRecipes] = useState([]); 
+  const [inputText, setInputText] = useState(''); //temp variable later transfered to ingredientsList, used to manage input
   const [showAddedMessage, setShowAddedMessage] = useState(false);
   const number = 5;
-
+  
+  /**
+   * 
+   * 
+   * Asynchronously fetches recipes from the Spoonacular API based on the current list of ingredients.
+   *
+   * @async
+   * @function
+   * @returns {Promise<void>}
+   */
   const fetchRecipes = async () => {
     const ingredientsString = ingredientsList.join(",");
     console.log("ingredientsString: " + ingredientsString);
@@ -31,6 +47,13 @@ const HomeScreen = () => {
     }
   };
 
+  /**
+   * showAddedMessage Timeout
+   * 
+   * This hook manages the visibility of the confirmation message
+   * displayed when a new ingredient is added. The message is shown for 2 seconds
+   * before automatically hiding. Is the little green box at the bottom that appears.
+   */
   useEffect(() => {
     let timeoutID;
     if (showAddedMessage) {
@@ -43,12 +66,29 @@ const HomeScreen = () => {
     };
   }, [showAddedMessage]);
 
+  /**
+   * Effect Hook: Fetch Recipes on Ingredients List Change
+   * 
+   * This useEffect hook triggers the `fetchRecipes` function whenever
+   * the `ingredientsList` state changes, making sure that the recipe data
+   * is updated based on the latest list of ingredients.
+   */
   useEffect(() => {
     if (ingredientsList.length > 0) {
       fetchRecipes();
     }
   }, [ingredientsList]);
 
+  /**
+   * searchRecipes
+   * 
+   * Handles the addition of a new ingredient to the `ingredientsList`.
+   * It validates the input to prevent adding empty strings and then updates
+   * the state accordingly. A confirmation message is displayed after successful addition.
+   * 
+   * @function
+   * @returns {void}
+   */
   const searchRecipes = () => {
     if (inputText.trim() === '') {
       return; // Prevent adding empty ingredients
@@ -57,9 +97,12 @@ const HomeScreen = () => {
     setInputText('');
     setShowAddedMessage(true);
   };
-
+  /*
+  * Renders the HomeScreen component.
+  */
   return (
     <View style={styles.homeScreenContainer}>
+      {/* Search Bar Section */}
       <View style={[styles.searchBarContainer, { backgroundColor: 'white' }]}>
         <View style={styles.searchBar}>
           <TextInput
@@ -69,17 +112,16 @@ const HomeScreen = () => {
             onChangeText={setInputText}
             onSubmitEditing={searchRecipes}
           />
-            <Icon
-              style={[styles.iconContainer, { right: 312 }]}
-              name="search"
-              size={20}
-              color='gray'
-            />
+          <Icon
+            style={[styles.iconContainer, { right: 312 }]}
+            name="search"
+            size={20}
+            color='gray'
+          />
         </View>
       </View>
 
-      
-
+      {/* Confirmation Message Section */}
       <View style={styles.recipeContainer}>
         {showAddedMessage && ingredientsList.length > 0 && (
           <View style={styles.confirmationContainer}>
@@ -93,6 +135,9 @@ const HomeScreen = () => {
   );
 };
 
+/**
+ * Stylesheet for HomeScreen Component
+ */
 const styles = StyleSheet.create({
   homeScreenContainer: {
     flex: 1,
